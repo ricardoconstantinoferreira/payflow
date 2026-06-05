@@ -1,0 +1,9 @@
+package com.flow.payflow.entity;
+
+public enum Status {
+    PENDING,
+    AUTHORIZED,
+    CAPTURED,
+    APPROVED,
+    FAILED;
+}
