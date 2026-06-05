@@ -2,6 +2,7 @@ package com.flow.payflow.service.impl;
 
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
+import com.flow.payflow.entity.Status;
 import com.flow.payflow.entity.Transaction;
 import com.flow.payflow.repository.TransactionRepository;
 import com.flow.payflow.service.TransactionService;
@@ -35,6 +36,8 @@ public class TransactionServiceImpl implements TransactionService {
         t.setDigits(request.digits());
         t.setToken(request.token());
         t.setCreatedAt(OffsetDateTime.now());
+        t.setValue(request.value());
+        t.setStatus(Status.PENDING);
         Transaction saved = repository.save(t);
         return new TransactionResponse(saved.getId(), saved.getName(), saved.getDateValid(), saved.getDigits(), saved.getToken(), saved.getCreatedAt());
     }
