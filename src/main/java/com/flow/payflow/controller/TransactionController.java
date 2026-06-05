@@ -1,5 +1,6 @@
 package com.flow.payflow.controller;
 
+import com.flow.payflow.annotation.Idempotence;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.service.TransactionService;
@@ -25,6 +26,7 @@ public class TransactionController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Idempotence(timeout = 30)
     public ResponseEntity<TransactionResponse> create(@Valid @RequestBody TransactionDto dto, UriComponentsBuilder uriBuilder) {
         TransactionResponse created = transactionService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).location(uriBuilder.path("/api/transaction/{id}").buildAndExpand(created.id()).toUri()).body(created);
