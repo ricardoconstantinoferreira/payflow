@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping(value = "/api/transaction", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/transaction/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TransactionController {
 
     private final TransactionService transactionService;
