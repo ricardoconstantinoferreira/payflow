@@ -31,12 +31,12 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionResponse create(TransactionDto request) {
         Transaction t = new Transaction();
-        t.setName(request.name());
-        t.setDateValid(request.date_valid());
-        t.setDigits(request.digits());
-        t.setToken(request.token());
+        t.setName(request.getName());
+        t.setDateValid(request.getDateValid());
+        t.setDigits(request.getDigits());
+        t.setToken(request.getToken());
         t.setCreatedAt(OffsetDateTime.now());
-        t.setValue(request.value());
+        t.setValue(request.getValue());
         t.setStatus(Status.PENDING);
         Transaction saved = repository.save(t);
         return new TransactionResponse(saved.getId(), saved.getName(), saved.getDateValid(), saved.getDigits(), saved.getToken(), saved.getCreatedAt());

@@ -1,14 +1,50 @@
 package com.flow.payflow.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+public class TransactionDto{
 
-public record TransactionDto(
-        @NotBlank @Size(max = 255) String name,
-        @NotBlank @Size(max = 20) String date_valid,
-        @NotBlank @Size(min = 4, max = 4) String digits,
-        @NotBlank @Size(max = 255) String token,
-        @NotNull float value
-) {
+    private String name;
+    private String dateValid;
+    private String digits;
+    private String token;
+    private float value;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDateValid() {
+        return dateValid;
+    }
+
+    public void setDateValid(String dateValid) {
+        this.dateValid = dateValid;
+    }
+
+    public String getDigits() {
+        return digits;
+    }
+
+    public void setDigits(String digits) {
+        this.digits = digits;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public void setValue(float value) {
+        this.value = value;
+    }
 }
