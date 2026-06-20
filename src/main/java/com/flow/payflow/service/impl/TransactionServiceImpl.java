@@ -4,6 +4,7 @@ import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.entity.BillingAddress;
 import com.flow.payflow.entity.Customer;
+import com.flow.payflow.entity.Status;
 import com.flow.payflow.entity.Transaction;
 import com.flow.payflow.repository.TransactionRepository;
 import com.flow.payflow.service.BillingAddressService;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,8 @@ public class TransactionServiceImpl implements TransactionService {
         t.setCardToken(request.getCardToken());
         t.setCustomer(customer);
         t.setBillingAddress(billingAddress);
+        t.setStatus(Status.PENDING);
+        t.setCreatedAt(OffsetDateTime.now());
 
         Transaction saved = repository.save(t);
 

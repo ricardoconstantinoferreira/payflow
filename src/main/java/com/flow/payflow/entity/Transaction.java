@@ -30,6 +30,12 @@ public class Transaction {
     @Column(nullable = false, length = 255)
     private String cardToken;
 
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
+    @Column(name = "status", nullable = false)
+    private Status status;
+
     @ManyToOne
     @JoinColumn(
             name = "customer_id",
@@ -129,5 +135,21 @@ public class Transaction {
 
     public void setBillingAddress(BillingAddress billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
