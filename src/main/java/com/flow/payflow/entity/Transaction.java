@@ -1,11 +1,6 @@
 package com.flow.payflow.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 
@@ -18,27 +13,50 @@ public class Transaction {
     private Long id;
 
     @Column(nullable = false, length = 255)
-    private String name;
-
-    @Column(name = "date_valid", nullable = false)
-    private String dateValid;
-
-    @Column(nullable = false, length = 4)
-    private String digits;
+    private String orderId;
 
     @Column(nullable = false, length = 255)
-    private String token;
+    private Float amount;
 
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    @Column(nullable = false, length = 255)
+    private String currency;
 
-    @Column(name = "status", nullable = false)
-    private Status status;
+    @Column(nullable = false, length = 11)
+    private int installments;
 
-    @Column(name = "value", nullable = false)
-    private float value;
+    @Column(nullable = false, length = 255)
+    private String paymentMethod;
 
-    public Transaction() {
+    @Column(nullable = false, length = 255)
+    private String cardToken;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "customer_id",
+            referencedColumnName = "id"
+    )
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "billing_address_id",
+            referencedColumnName = "id"
+    )
+    private BillingAddress billingAddress;
+
+    public Transaction() {}
+
+    public Transaction(Long id, String orderId, Float amount, String currency, int installments,
+                       String paymentMethod, String cardToken, Customer customer, BillingAddress billingAddress) {
+        this.id = id;
+        this.orderId = orderId;
+        this.amount = amount;
+        this.currency = currency;
+        this.installments = installments;
+        this.paymentMethod = paymentMethod;
+        this.cardToken = cardToken;
+        this.customer = customer;
+        this.billingAddress = billingAddress;
     }
 
     public Long getId() {
@@ -49,59 +67,67 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public String getDateValid() {
-        return dateValid;
+    public Float getAmount() {
+        return amount;
     }
 
-    public void setDateValid(String dateValid) {
-        this.dateValid = dateValid;
+    public void setAmount(Float amount) {
+        this.amount = amount;
     }
 
-    public String getDigits() {
-        return digits;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setDigits(String digits) {
-        this.digits = digits;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
-    public String getToken() {
-        return token;
+    public int getInstallments() {
+        return installments;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setInstallments(int installments) {
+        this.installments = installments;
     }
 
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getCardToken() {
+        return cardToken;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setCardToken(String cardToken) {
+        this.cardToken = cardToken;
     }
 
-    public float getValue() {
-        return value;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setValue(float value) {
-        this.value = value;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

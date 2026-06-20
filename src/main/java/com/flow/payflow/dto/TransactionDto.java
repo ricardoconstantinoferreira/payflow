@@ -1,50 +1,80 @@
 package com.flow.payflow.dto;
 
+import com.flow.payflow.entity.BillingAddress;
+import com.flow.payflow.entity.Customer;
+
 public class TransactionDto{
 
-    private String name;
-    private String dateValid;
-    private String digits;
-    private String token;
-    private float value;
+    private String orderId;
+    private Float amount;
+    private String currency;
+    private int installments;
+    private String paymentMethod;
+    private String cardToken;
+    private Customer customer;
+    private BillingAddress billingAddress;
 
-    public String getName() {
-        return name;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public String getDateValid() {
-        return dateValid;
+    public Float getAmount() {
+        return amount;
     }
 
-    public void setDateValid(String dateValid) {
-        this.dateValid = dateValid;
+    public void setAmount(Float amount) {
+        this.amount = amount;
     }
 
-    public String getDigits() {
-        return digits;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setDigits(String digits) {
-        this.digits = digits;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
-    public String getToken() {
-        return token;
+    public int getInstallments() {
+        return installments;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setInstallments(int installments) {
+        this.installments = installments;
     }
 
-    public float getValue() {
-        return value;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setValue(float value) {
-        this.value = value;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getCardToken() {
+        return cardToken;
+    }
+
+    public void setCardToken(String cardToken) {
+        this.cardToken = cardToken;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }
