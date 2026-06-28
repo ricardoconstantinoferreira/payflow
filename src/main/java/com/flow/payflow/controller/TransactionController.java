@@ -1,10 +1,12 @@
 package com.flow.payflow.controller;
 
 import com.flow.payflow.annotation.Idempotence;
+import com.flow.payflow.config.rabbitmq.RabbitMQConfig;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.service.TransactionService;
 import jakarta.validation.Valid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,22 +16,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/api/transaction/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TransactionController {
 
     private final TransactionService transactionService;
 
+    private final RabbitTemplate rabbitTemplate;
+
     @Autowired
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, RabbitTemplate rabbitTemplate) {
         this.transactionService = transactionService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Idempotence(timeout = 30)
-    public ResponseEntity<TransactionResponse> create(@Valid @RequestBody TransactionDto dto, UriComponentsBuilder uriBuilder) {
-        TransactionResponse created = transactionService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).location(uriBuilder.path("/api/transaction/{id}").buildAndExpand(created.id()).toUri()).body(created);
+    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody TransactionDto dto, UriComponentsBuilder uriBuilder) {
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_PAYMENT,
+                RabbitMQConfig.ROUTING_KEY_PAYMENT,
+                dto
+        );
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(Map.of("status", "processing", "message", "Transação enviada para processamento"));
     }
 
     @GetMapping("/{id}")
