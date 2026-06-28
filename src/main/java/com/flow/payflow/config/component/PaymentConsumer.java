@@ -1,4 +1,4 @@
-package com.flow.payflow.component;
+package com.flow.payflow.config.component;
 
 import com.flow.payflow.config.rabbitmq.RabbitMQConfig;
 import com.flow.payflow.dto.TransactionDto;
