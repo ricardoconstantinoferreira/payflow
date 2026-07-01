@@ -13,4 +13,8 @@ public interface StoreService {
     List<Store> getAll();
 
     void deleteById(Long id);
+
+    void saveToken(Store store, String token);
+
+    Store getStoreByEmail(String email);
 }
