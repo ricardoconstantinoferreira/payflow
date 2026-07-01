@@ -8,10 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/transaction/store", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,5 +30,29 @@ public class StoreController {
         Store response = storeService.create(store);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Store> update(@PathVariable(value = "id") Long id, @RequestBody StoreDto storeDto) {
+        Store store = storeMapper.toEntity(storeDto);
+        store.setId(id);
+
+        Store response = storeService.create(store);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Store> getById(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(storeService.getById(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Store>> getAll() {
+        return new ResponseEntity<>(storeService.getAll(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable(value = "id") Long id) {
+        storeService.deleteById(id);
     }
 }
