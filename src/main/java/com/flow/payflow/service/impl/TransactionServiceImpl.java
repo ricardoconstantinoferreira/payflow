@@ -9,6 +9,7 @@ import com.flow.payflow.entity.Transaction;
 import com.flow.payflow.repository.TransactionRepository;
 import com.flow.payflow.service.BillingAddressService;
 import com.flow.payflow.service.CustomerService;
+import com.flow.payflow.service.FeesService;
 import com.flow.payflow.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,16 +29,19 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository repository;
     private final CustomerService customerService;
     private final BillingAddressService billingAddressService;
+    private final FeesService feesService;
 
     @Autowired
     public TransactionServiceImpl(
             TransactionRepository repository,
             CustomerService customerService,
-            BillingAddressService billingAddressService
+            BillingAddressService billingAddressService,
+            FeesService feesService
     ) {
         this.repository = repository;
         this.customerService = customerService;
         this.billingAddressService = billingAddressService;
+        this.feesService = feesService;
     }
 
     @Override
