@@ -34,7 +34,13 @@ public class TransactionController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Idempotence(timeout = 30)
-    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody TransactionDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody TransactionDto dto,
+                                                      @RequestHeader("Authorization") String authorization) {
+
+        if (authorization != null) {
+            String token = authorization.replace("Bearer ", "");
+            dto.setAuthToken(token);
+        }
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_PAYMENT,

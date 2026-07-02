@@ -2,15 +2,9 @@ package com.flow.payflow.service.impl;
 
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
-import com.flow.payflow.entity.BillingAddress;
-import com.flow.payflow.entity.Customer;
-import com.flow.payflow.entity.Status;
-import com.flow.payflow.entity.Transaction;
+import com.flow.payflow.entity.*;
 import com.flow.payflow.repository.TransactionRepository;
-import com.flow.payflow.service.BillingAddressService;
-import com.flow.payflow.service.CustomerService;
-import com.flow.payflow.service.FeesService;
-import com.flow.payflow.service.TransactionService;
+import com.flow.payflow.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,18 +24,21 @@ public class TransactionServiceImpl implements TransactionService {
     private final CustomerService customerService;
     private final BillingAddressService billingAddressService;
     private final FeesService feesService;
+    private final StoreService storeService;
 
     @Autowired
     public TransactionServiceImpl(
             TransactionRepository repository,
             CustomerService customerService,
             BillingAddressService billingAddressService,
-            FeesService feesService
+            FeesService feesService,
+            StoreService storeService
     ) {
         this.repository = repository;
         this.customerService = customerService;
         this.billingAddressService = billingAddressService;
         this.feesService = feesService;
+        this.storeService = storeService;
     }
 
     @Override
@@ -63,6 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
         t.setCreatedAt(OffsetDateTime.now());
 
         Transaction saved = repository.save(t);
+        addFeesTransaction(saved, request.getAuthToken());
 
         return new TransactionResponse(
                 saved.getId(),
@@ -88,5 +86,16 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(t -> new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(), t.getCurrency(), t.getInstallments(), t.getPaymentMethod(), t.getCardToken()))
                 .collect(Collectors.toList());
         return new PageImpl<>(content, pageable, page.getTotalElements());
+    }
+
+    private void addFeesTransaction(Transaction transaction, String token) {
+        Store store = storeService.getStoreByToken(token);
+
+        Fees fees = new Fees();
+        fees.setDescriptionFees(transaction.getInstallments());
+        fees.setTransaction(transaction);
+        fees.setStore(store);
+
+        feesService.save(fees);
     }
 }

@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             Optional<Store> storeOptional = storeRepository.findByEmail(email);
             var store = storeOptional.get();
 
-            var authentication = new UsernamePasswordAuthenticationToken(store, null, store.getAuthorities());
+            var authentication = new UsernamePasswordAuthenticationToken(store, store.getPassword(), store.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
