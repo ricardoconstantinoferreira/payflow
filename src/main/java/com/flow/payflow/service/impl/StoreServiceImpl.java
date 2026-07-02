@@ -58,4 +58,10 @@ public class StoreServiceImpl implements StoreService {
 
         return storeOptional.get();
     }
+
+    @Override
+    public Store getStoreByToken(String token) {
+        Optional<Store> storeOptional = storeRepository.findByToken(token);
+        return (storeOptional.isEmpty()) ? null : storeOptional.get();
+    }
 }

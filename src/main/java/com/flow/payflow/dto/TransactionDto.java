@@ -13,6 +13,7 @@ public class TransactionDto{
     private String cardToken;
     private Customer customer;
     private BillingAddress billingAddress;
+    private String authToken;
 
     public String getOrderId() {
         return orderId;
@@ -76,5 +77,13 @@ public class TransactionDto{
 
     public void setBillingAddress(BillingAddress billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

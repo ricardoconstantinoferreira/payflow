@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
@@ -34,7 +33,13 @@ public class TransactionController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Idempotence(timeout = 30)
-    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody TransactionDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody TransactionDto dto,
+                                                      @RequestHeader("Authorization") String authorization) {
+
+        if (authorization != null) {
+            String token = authorization.replace("Bearer ", "");
+            dto.setAuthToken(token);
+        }
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_PAYMENT,

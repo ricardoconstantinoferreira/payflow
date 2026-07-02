@@ -10,7 +10,8 @@ public class Fees {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
+    @Column(name = "description_fees", nullable = false)
+    private int descriptionFees;
 
     @ManyToOne
     @JoinColumn(
@@ -29,9 +30,9 @@ public class Fees {
     public Fees() {
     }
 
-    public Fees(Long id, String description, Store store, Transaction transaction) {
+    public Fees(Long id, int descriptionFees, Store store, Transaction transaction) {
         this.id = id;
-        this.description = description;
+        this.descriptionFees = descriptionFees;
         this.store = store;
         this.transaction = transaction;
     }
@@ -44,12 +45,12 @@ public class Fees {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public int getDescriptionFees() {
+        return descriptionFees;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionFees(int descriptionFees) {
+        this.descriptionFees = descriptionFees;
     }
 
     public Store getStore() {
