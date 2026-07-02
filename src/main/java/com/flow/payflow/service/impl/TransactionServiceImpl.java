@@ -25,6 +25,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final BillingAddressService billingAddressService;
     private final FeesService feesService;
     private final StoreService storeService;
+    private final InstallmentsService installmentsService;
 
     @Autowired
     public TransactionServiceImpl(
@@ -32,13 +33,15 @@ public class TransactionServiceImpl implements TransactionService {
             CustomerService customerService,
             BillingAddressService billingAddressService,
             FeesService feesService,
-            StoreService storeService
+            StoreService storeService,
+            InstallmentsService installmentsService
     ) {
         this.repository = repository;
         this.customerService = customerService;
         this.billingAddressService = billingAddressService;
         this.feesService = feesService;
         this.storeService = storeService;
+        this.installmentsService = installmentsService;
     }
 
     @Override
@@ -58,6 +61,9 @@ public class TransactionServiceImpl implements TransactionService {
         t.setBillingAddress(billingAddress);
         t.setStatus(Status.PENDING);
         t.setCreatedAt(OffsetDateTime.now());
+
+        Float amountTotal = installmentsService.getCalcAmountTotal(t, request.getAuthToken());
+        t.setAmountTotal(amountTotal);
 
         Transaction saved = repository.save(t);
         addFeesTransaction(saved, request.getAuthToken());

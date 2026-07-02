@@ -36,6 +36,9 @@ public class Transaction {
     @Column(name = "status", nullable = false)
     private Status status;
 
+    @Column(name = "amount_total", nullable = false)
+    private Float amountTotal;
+
     @ManyToOne
     @JoinColumn(
             name = "customer_id",
@@ -53,7 +56,8 @@ public class Transaction {
     public Transaction() {}
 
     public Transaction(Long id, String orderId, Float amount, String currency, int installments,
-                       String paymentMethod, String cardToken, Customer customer, BillingAddress billingAddress) {
+                       String paymentMethod, String cardToken, Customer customer, BillingAddress billingAddress,
+                       Float amountTotal) {
         this.id = id;
         this.orderId = orderId;
         this.amount = amount;
@@ -63,6 +67,7 @@ public class Transaction {
         this.cardToken = cardToken;
         this.customer = customer;
         this.billingAddress = billingAddress;
+        this.amountTotal = amountTotal;
     }
 
     public Long getId() {
@@ -151,5 +156,13 @@ public class Transaction {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Float getAmountTotal() {
+        return amountTotal;
+    }
+
+    public void setAmountTotal(Float amountTotal) {
+        this.amountTotal = amountTotal;
     }
 }

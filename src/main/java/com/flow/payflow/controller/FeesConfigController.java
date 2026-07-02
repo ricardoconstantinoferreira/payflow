@@ -4,6 +4,7 @@ import com.flow.payflow.dto.FeesConfigDto;
 import com.flow.payflow.entity.FeesConfig;
 import com.flow.payflow.mapper.FeesConfigMapper;
 import com.flow.payflow.service.FeesConfigService;
+import com.flow.payflow.service.StoreService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +20,10 @@ public class FeesConfigController {
     private final FeesConfigService feesConfigService;
     private final FeesConfigMapper feesConfigMapper;
 
-    public FeesConfigController(FeesConfigService feesConfigService, FeesConfigMapper feesConfigMapper) {
+    public FeesConfigController(
+            FeesConfigService feesConfigService,
+            FeesConfigMapper feesConfigMapper
+    ) {
         this.feesConfigService = feesConfigService;
         this.feesConfigMapper = feesConfigMapper;
     }
@@ -27,7 +31,7 @@ public class FeesConfigController {
     @PostMapping
     public ResponseEntity<FeesConfig> save(@Valid @RequestBody FeesConfigDto dto) {
         FeesConfig feesConfig = feesConfigMapper.toEntity(dto);
-        FeesConfig result = feesConfigService.save(feesConfig);
+        FeesConfig result = feesConfigService.save(feesConfig, dto.getStoreId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -37,17 +41,13 @@ public class FeesConfigController {
         FeesConfig feesConfig = feesConfigMapper.toEntity(dto);
         feesConfig.setId(id);
 
-        FeesConfig result = feesConfigService.save(feesConfig);
+        FeesConfig result = feesConfigService.save(feesConfig, dto.getStoreId());
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/{storeId}")
-    public ResponseEntity<FeesConfig> getByStoreId(@PathVariable(value = "storeId") Long storeId) {
-        return new ResponseEntity<>(feesConfigService.getByStoreId(storeId), HttpStatus.OK);
-    }
-
     @GetMapping
-    public ResponseEntity<List<FeesConfig>> getAll() {
-        return new ResponseEntity<>(feesConfigService.getAll(), HttpStatus.OK);
+    public ResponseEntity<FeesConfig> getByStoreId(@RequestHeader("Authorization") String authorization) {
+        String token = authorization.replace("Bearer ", "");
+        return new ResponseEntity<>(feesConfigService.getByStoreByToken(token), HttpStatus.OK);
     }
 }
