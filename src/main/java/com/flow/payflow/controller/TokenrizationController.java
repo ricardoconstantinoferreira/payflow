@@ -21,7 +21,7 @@ public class TokenrizationController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenrizationResponseDto> validate(@Valid @RequestBody TokenrizationDto tokenrizationDto) {
-        TokenrizationResponseDto responseDto =  tokenrizationService.getTokenrization(tokenrizationDto);
+        TokenrizationResponseDto responseDto = tokenrizationService.getTokenrization(tokenrizationDto);
         return ResponseEntity.ok(responseDto);
     }
 }
