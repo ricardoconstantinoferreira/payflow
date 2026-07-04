@@ -16,7 +16,7 @@ public class TokenrizationServiceImpl implements TokenrizationService {
     private String uri;
 
     public TokenrizationServiceImpl() {
-        this.webClient = WebClient.create();;
+        this.webClient = WebClient.create();
     }
 
     public TokenrizationResponseDto getTokenrization(TokenrizationDto tokenrizationDto) {
