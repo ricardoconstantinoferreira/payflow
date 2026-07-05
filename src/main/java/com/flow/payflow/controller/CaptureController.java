@@ -3,8 +3,6 @@ package com.flow.payflow.controller;
 import com.flow.payflow.config.rabbitmq.CaptureMQConfig;
 import com.flow.payflow.dto.CaptureApiDto;
 import com.flow.payflow.dto.CaptureDto;
-import com.flow.payflow.service.TransactionService;
-import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +24,7 @@ public class CaptureController {
     @PostMapping
     public ResponseEntity<Map<String, String>> capture(
             @PathVariable(value = "token") String token,
-            @Valid @RequestBody CaptureDto dto
+            @RequestBody CaptureDto dto
             ) {
 
         CaptureApiDto captureApiDto = new CaptureApiDto();

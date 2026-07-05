@@ -1,8 +1,6 @@
 package com.flow.payflow.config.rabbitmq;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +28,5 @@ public class CaptureMQConfig {
             @Qualifier("exchangeCapture") DirectExchange exchange
     ) {
         return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY_CAPTURE);
-    }
-
-    @Bean(name = "converterCapture")
-    public MessageConverter jsonMessageConverter() {
-        return new JacksonJsonMessageConverter();
     }
 }
