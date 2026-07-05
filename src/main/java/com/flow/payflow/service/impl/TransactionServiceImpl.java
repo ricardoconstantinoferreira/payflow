@@ -81,7 +81,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateStatus(TransactionDto request, Long id, Status status) {
+    public void updateStatus(Long id, Status status) {
         Transaction t = repository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found: " + id));
         t.setStatus(status);
         repository.save(t);
@@ -103,6 +103,12 @@ public class TransactionServiceImpl implements TransactionService {
                         t.getAmountTotal()))
                 .collect(Collectors.toList());
         return new PageImpl<>(content, pageable, page.getTotalElements());
+    }
+
+    @Override
+    public Transaction getByCardToken(String token) {
+        Transaction transaction = repository.getByCardToken(token).orElseThrow(() -> new RuntimeException("Transaction not found: " + token));
+        return transaction;
     }
 
     private void addFeesTransaction(Transaction transaction, String token) {

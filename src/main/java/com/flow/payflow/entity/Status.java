@@ -4,6 +4,6 @@ public enum Status {
     PENDING,
     AUTHORIZED,
     CAPTURED,
-    APPROVED,
+    PAID,
     FAILED;
 }

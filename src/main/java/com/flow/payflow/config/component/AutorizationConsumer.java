@@ -1,6 +1,6 @@
 package com.flow.payflow.config.component;
 
-import com.flow.payflow.config.rabbitmq.RabbitMQConfig;
+import com.flow.payflow.config.rabbitmq.AutorizationMQConfig;
 import com.flow.payflow.dto.AutorizationResponseDto;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
@@ -11,12 +11,12 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentConsumer {
+public class AutorizationConsumer {
 
     private final TransactionService transactionService;
     private final AutorizationService autorizationService;
 
-    public PaymentConsumer(
+    public AutorizationConsumer(
             TransactionService transactionService,
             AutorizationService autorizationService
     ) {
@@ -24,15 +24,15 @@ public class PaymentConsumer {
         this.autorizationService = autorizationService;
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_PAYMENT)
-    public void consumePaymentMessage(TransactionDto transactionDto) {
+    @RabbitListener(queues = AutorizationMQConfig.QUEUE_PAYMENT)
+    public void consumeAutorizationMessage(TransactionDto transactionDto) {
         TransactionResponse response =  transactionService.create(transactionDto);
         AutorizationResponseDto responseDto = autorizationService.autorization(transactionDto, response.amountTotal());
 
         if (responseDto.getCode().equals("00")) {
-            transactionService.updateStatus(transactionDto, response.id(), Status.AUTHORIZED);
+            transactionService.updateStatus(response.id(), Status.AUTHORIZED);
         } else {
-            transactionService.updateStatus(transactionDto, response.id(), Status.FAILED);
+            transactionService.updateStatus(response.id(), Status.FAILED);
         }
     }
 }
