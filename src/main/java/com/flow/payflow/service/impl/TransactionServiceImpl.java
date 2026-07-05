@@ -75,23 +75,40 @@ public class TransactionServiceImpl implements TransactionService {
                 saved.getCurrency(),
                 saved.getInstallments(),
                 saved.getPaymentMethod(),
-                saved.getCardToken()
+                saved.getCardToken(),
+                saved.getAmountTotal()
         );
+    }
+
+    @Override
+    public void updateStatus(Long id, Status status) {
+        Transaction t = repository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found: " + id));
+        t.setStatus(status);
+        repository.save(t);
     }
 
     @Override
     public TransactionResponse getById(Long id) {
         Transaction t = repository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found: " + id));
-        return new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(), t.getCurrency(), t.getInstallments(), t.getPaymentMethod(), t.getCardToken());
+        return new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(), t.getCurrency(),
+                t.getInstallments(), t.getPaymentMethod(), t.getCardToken(), t.getAmountTotal());
     }
 
     @Override
     public Page<TransactionResponse> list(Pageable pageable) {
         Page<Transaction> page = repository.findAll(pageable);
         List<TransactionResponse> content = page.getContent().stream()
-                .map(t -> new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(), t.getCurrency(), t.getInstallments(), t.getPaymentMethod(), t.getCardToken()))
+                .map(t -> new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(),
+                        t.getCurrency(), t.getInstallments(), t.getPaymentMethod(), t.getCardToken(),
+                        t.getAmountTotal()))
                 .collect(Collectors.toList());
         return new PageImpl<>(content, pageable, page.getTotalElements());
+    }
+
+    @Override
+    public Transaction getByCardToken(String token) {
+        Transaction transaction = repository.getByCardToken(token).orElseThrow(() -> new RuntimeException("Transaction not found: " + token));
+        return transaction;
     }
 
     private void addFeesTransaction(Transaction transaction, String token) {

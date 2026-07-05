@@ -1,7 +1,7 @@
 package com.flow.payflow.controller;
 
 import com.flow.payflow.annotation.Idempotence;
-import com.flow.payflow.config.rabbitmq.RabbitMQConfig;
+import com.flow.payflow.config.rabbitmq.AutorizationMQConfig;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.service.TransactionService;
@@ -42,8 +42,8 @@ public class TransactionController {
         }
 
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_PAYMENT,
-                RabbitMQConfig.ROUTING_KEY_PAYMENT,
+                AutorizationMQConfig.EXCHANGE_PAYMENT,
+                AutorizationMQConfig.ROUTING_KEY_PAYMENT,
                 dto
         );
 

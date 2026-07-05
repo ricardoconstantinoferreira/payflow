@@ -31,15 +31,19 @@ public class Store extends RepresentationModel<Store> implements UserDetails {
     @Column(nullable = true)
     private String token;
 
+    @Column(nullable = false)
+    private String webhook;
+
     public Store() {
     }
 
-    public Store(Long id, String description, String email, String password, String token) {
+    public Store(Long id, String description, String email, String password, String token, String webhook) {
         this.id = id;
         this.description = description;
         this.email = email;
         this.password = password;
         this.token = token;
+        this.webhook = webhook;
     }
 
     public Long getId() {
@@ -76,6 +80,14 @@ public class Store extends RepresentationModel<Store> implements UserDetails {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getWebhook() {
+        return webhook;
+    }
+
+    public void setWebhook(String webhook) {
+        this.webhook = webhook;
     }
 
     @Override

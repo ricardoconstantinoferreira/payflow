@@ -7,6 +7,7 @@ public class StoreDto {
     private String email;
     private String password;
     private String token;
+    private String webhook;
 
     public Long getId() {
         return id;
@@ -46,5 +47,13 @@ public class StoreDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getWebhook() {
+        return webhook;
+    }
+
+    public void setWebhook(String webhook) {
+        this.webhook = webhook;
     }
 }

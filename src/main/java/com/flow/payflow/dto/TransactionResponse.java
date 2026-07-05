@@ -7,6 +7,7 @@ public record TransactionResponse(
         String currency,
         int installments,
         String paymentMethod,
-        String cardToken
+        String cardToken,
+        Float amountTotal
 ) {
 }
