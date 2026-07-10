@@ -13,24 +13,29 @@ public class Blockade {
     @Column(name = "qty")
     private Long qty;
 
-    @Column(name = "`interval`")
-    private Long interval;
-
     @Column(name = "type_parameter")
     private TypeParameter typeParameter;
 
     @Column(name = "parameter")
     private Long parameter;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "store_id",
+            referencedColumnName = "id"
+    )
+    private Store store;
+
     public Blockade() {
     }
 
-    public Blockade(Long id, Long qty, Long interval, TypeParameter typeParameter, Long parameter) {
+    public Blockade(Long id, Long qty, Long interval,
+                    TypeParameter typeParameter, Long parameter, Store store) {
         this.id = id;
         this.qty = qty;
-        this.interval = interval;
         this.typeParameter = typeParameter;
         this.parameter = parameter;
+        this.store = store;
     }
 
     public Long getId() {
@@ -49,14 +54,6 @@ public class Blockade {
         this.qty = qty;
     }
 
-    public Long getInterval() {
-        return interval;
-    }
-
-    public void setInterval(Long interval) {
-        this.interval = interval;
-    }
-
     public TypeParameter getTypeParameter() {
         return typeParameter;
     }
@@ -71,5 +68,13 @@ public class Blockade {
 
     public void setParameter(Long parameter) {
         this.parameter = parameter;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }
