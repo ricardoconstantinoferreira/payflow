@@ -23,14 +23,18 @@ public class FeesConfig {
     )
     private Store store;
 
+    @Column(name = "minimal_amount", nullable = false)
+    private Float minimalAmount;
+
     public FeesConfig() {
     }
 
-    public FeesConfig(Long id, int installments, int fees, Store store) {
+    public FeesConfig(Long id, int installments, int fees, Store store, Float minimalAmount) {
         this.id = id;
         this.installments = installments;
         this.fees = fees;
         this.store = store;
+        this.minimalAmount = minimalAmount;
     }
 
     public Long getId() {
@@ -63,5 +67,13 @@ public class FeesConfig {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public Float getMinimalAmount() {
+        return minimalAmount;
+    }
+
+    public void setMinimalAmount(Float minimalAmount) {
+        this.minimalAmount = minimalAmount;
     }
 }

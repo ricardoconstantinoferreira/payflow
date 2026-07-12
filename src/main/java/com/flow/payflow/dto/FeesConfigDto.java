@@ -10,6 +10,8 @@ public class FeesConfigDto {
 
     private Long storeId;
 
+    private Float minimalAmount;
+
     public Long getId() {
         return id;
     }
@@ -40,5 +42,13 @@ public class FeesConfigDto {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
+    }
+
+    public Float getMinimalAmount() {
+        return minimalAmount;
+    }
+
+    public void setMinimalAmount(Float minimalAmount) {
+        this.minimalAmount = minimalAmount;
     }
 }
