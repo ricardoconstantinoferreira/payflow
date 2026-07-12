@@ -8,6 +8,5 @@ import org.mapstruct.Mapper;
 public interface StoreMapper {
 
     Store toEntity(StoreDto storeDto);
-
     StoreDto toDto(Store entity);
 }
