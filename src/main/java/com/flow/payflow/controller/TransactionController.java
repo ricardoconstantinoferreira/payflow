@@ -4,6 +4,8 @@ import com.flow.payflow.annotation.Idempotence;
 import com.flow.payflow.config.rabbitmq.AutorizationMQConfig;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
+import com.flow.payflow.dto.TransactionStatusDto;
+import com.flow.payflow.entity.Status;
 import com.flow.payflow.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -61,5 +63,16 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionResponse>> list(Pageable pageable) {
         Page<TransactionResponse> page = transactionService.list(pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<Map<String, String>> updateStatus(@PathVariable(value = "id") Long id,
+                                                            @RequestBody TransactionStatusDto dto) {
+
+        Status status = Status.valueOf(dto.getStatus().toUpperCase());
+        transactionService.updateStatus(id, status);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(Map.of("status", "processing", "message", "Status de transação atualizada com sucesso."));
     }
 }
