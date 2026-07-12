@@ -53,4 +53,10 @@ public class BlockadeServiceImpl implements BlockadeService {
         Optional<Blockade> blockade = blockadeRepository.findByStoreId(storeId);
         return (blockade.isEmpty()) ? null : blockade.get();
     }
+
+    @Override
+    public Blockade getBlockadeConfig(String token) {
+        Store store = storeService.getStoreByToken(token);
+        return getByStoreId(store.getId());
+    }
 }
