@@ -54,7 +54,13 @@ public class TransactionServiceImpl implements TransactionService {
         t.setOrderId(request.getOrderId());
         t.setAmount(request.getAmount());
         t.setCurrency(request.getCurrency());
-        t.setInstallments(request.getInstallments());
+
+        if (getInstallmentsNoAllowed(request)) {
+            t.setInstallments(1);
+        } else {
+            t.setInstallments(request.getInstallments());
+        }
+
         t.setPaymentMethod(request.getPaymentMethod());
         t.setCardToken(request.getCardToken());
         t.setCustomer(customer);
@@ -120,5 +126,10 @@ public class TransactionServiceImpl implements TransactionService {
         fees.setStore(store);
 
         feesService.save(fees);
+    }
+
+    private boolean getInstallmentsNoAllowed(TransactionDto dto) {
+        Long minimalAmount = storeService.getMinimalValueByStoreToken(dto.getAuthToken());
+        return dto.getAmount() < minimalAmount;
     }
 }

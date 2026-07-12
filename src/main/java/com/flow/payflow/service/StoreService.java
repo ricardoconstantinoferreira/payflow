@@ -13,4 +13,5 @@ public interface StoreService {
     void saveToken(Store store, String token);
     Store getStoreByEmail(String email);
     Store getStoreByToken(String token);
+    Long getMinimalValueByStoreToken(String token);
 }

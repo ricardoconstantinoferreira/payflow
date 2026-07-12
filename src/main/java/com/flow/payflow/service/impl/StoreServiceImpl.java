@@ -64,4 +64,9 @@ public class StoreServiceImpl implements StoreService {
         Optional<Store> storeOptional = storeRepository.findByToken(token);
         return (storeOptional.isEmpty()) ? null : storeOptional.get();
     }
+
+    @Override
+    public Long getMinimalValueByStoreToken(String token) {
+        return storeRepository.findByMinimalAmountStoreToken(token);
+    }
 }

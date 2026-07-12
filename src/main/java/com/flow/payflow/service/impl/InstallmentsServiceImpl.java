@@ -1,11 +1,9 @@
 package com.flow.payflow.service.impl;
 
-import com.flow.payflow.entity.Fees;
 import com.flow.payflow.entity.FeesConfig;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.entity.Transaction;
 import com.flow.payflow.service.FeesConfigService;
-import com.flow.payflow.service.FeesService;
 import com.flow.payflow.service.InstallmentsService;
 import com.flow.payflow.service.StoreService;
 import org.springframework.stereotype.Service;
