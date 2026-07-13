@@ -6,6 +6,9 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.service.StoreService;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Slf4j
 @Service
 public class TokenService {
 
+    private static final Logger log = LoggerFactory.getLogger(TokenService.class);
     @Value("${api.security.token.secret}")
     private String secret;
 
@@ -37,6 +42,7 @@ public class TokenService {
 
             if (!token.isEmpty()) {
                 storeService.saveToken(store, token);
+                log.info("Token gerado com sucesso.");
             }
 
             return token;
@@ -58,14 +64,17 @@ public class TokenService {
                 Store customer = storeService.getStoreByEmail(email);
 
                 if (!customer.getToken().equals(token)) {
+                    log.error("Token não validado.");
                     return "";
                 }
             }
 
+            log.info("Token validado com sucesso.");
             return email;
 
 
         } catch (JWTVerificationException e) {
+            log.error("Token não validado.");
             return "";
         }
     }
