@@ -30,7 +30,7 @@ public class TokenrizationController {
         String token = null;
         if (authorization != null) {
             token = authorization.replace("Bearer ", "");
-            log.info("Recebendo o token " + token);
+            log.info("Recebendo o token pra tokenrizar cartao " + token);
         }
 
         TokenrizationResponseDto responseDto = tokenrizationService.getTokenrization(tokenrizationDto);
