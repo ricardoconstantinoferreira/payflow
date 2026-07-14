@@ -1,21 +1,23 @@
 package com.flow.payflow.service.impl;
 
+import com.flow.payflow.config.component.CaptureConsumer;
 import com.flow.payflow.entity.Blockade;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.entity.TypeParameter;
 import com.flow.payflow.repository.BlockadeRepository;
 import com.flow.payflow.service.BlockadeService;
 import com.flow.payflow.service.StoreService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class BlockadeServiceImpl implements BlockadeService {
 
+    private static final Logger log = LoggerFactory.getLogger(BlockadeServiceImpl.class);
     private final BlockadeRepository blockadeRepository;
     private final StoreService storeService;
 
