@@ -5,6 +5,8 @@ import com.flow.payflow.dto.TokenrizationResponseDto;
 import com.flow.payflow.service.TokenrizationService;
 import com.flow.payflow.usecase.VelocityCheck;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/v1/transaction/tokenrization", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TokenrizationController {
 
+    private static final Logger log = LoggerFactory.getLogger(TokenrizationController.class);
     @Autowired
     private TokenrizationService tokenrizationService;
 
@@ -27,12 +30,14 @@ public class TokenrizationController {
         String token = null;
         if (authorization != null) {
             token = authorization.replace("Bearer ", "");
+            log.info("Recebendo o token " + token);
         }
 
         TokenrizationResponseDto responseDto = tokenrizationService.getTokenrization(tokenrizationDto);
 
         if (responseDto.getCode().equals("00")) {
             if (!velocityCheck.check(tokenrizationDto.getCard(), token)) {
+                log.error("Quantidade de requisições ultrapassou o limite.");
                 throw new RuntimeException("Quantidade de requisições ultrapassou o limite.");
             }
         }
