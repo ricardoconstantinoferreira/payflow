@@ -11,10 +11,10 @@ import com.flow.payflow.service.ChangeStatusService;
 import com.flow.payflow.service.StoreService;
 import com.flow.payflow.service.TransactionService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,7 @@ import java.util.Map;
 @RequestMapping(value = "/api/transaction/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TransactionController {
 
+    private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
     private final TransactionService transactionService;
 
     private final RabbitTemplate rabbitTemplate;
@@ -57,6 +58,9 @@ public class TransactionController {
             dto.setAuthToken(token);
         }
 
+        log.info("Realizando a transação");
+        log.info("Enviando a transação para o RabbitMQ");
+
         rabbitTemplate.convertAndSend(
                 AutorizationMQConfig.EXCHANGE_PAYMENT,
                 AutorizationMQConfig.ROUTING_KEY_PAYMENT,
@@ -73,12 +77,6 @@ public class TransactionController {
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<TransactionResponse>> list(Pageable pageable) {
-        Page<TransactionResponse> page = transactionService.list(pageable);
-        return ResponseEntity.ok(page);
-    }
-
     @PutMapping("/status/{id}")
     public ResponseEntity<Map<String, String>> updateStatus(@PathVariable(value = "id") Long id,
                                                             @RequestBody TransactionStatusDto dto,
@@ -91,9 +89,11 @@ public class TransactionController {
 
         Status status = Status.valueOf(dto.getStatus().toUpperCase());
         transactionService.updateStatus(id, status);
+        log.info("Update status transaction to {}", status);
 
         Store store = storeService.getStoreByToken(token);
         changeStatusService.send(dto, store.getWebhook());
+        log.info("Send status para webwook");
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(Map.of("status", "processing", "message", "Status de transação atualizada com sucesso."));

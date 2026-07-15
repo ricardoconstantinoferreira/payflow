@@ -3,6 +3,8 @@ package com.flow.payflow.service.impl;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.repository.StoreRepository;
 import com.flow.payflow.service.StoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.Optional;
 @Service
 public class StoreServiceImpl implements StoreService {
 
+    private static final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
     private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -45,6 +48,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void saveToken(Store store, String token) {
         store.setToken(token);
+        log.info("Update store token {}", token);
         storeRepository.save(store);
     }
 
@@ -53,6 +57,7 @@ public class StoreServiceImpl implements StoreService {
         Optional<Store> storeOptional = storeRepository.findByEmail(email);
 
         if (storeOptional.isEmpty()) {
+            log.error("No Store by email {}", email);
             return null;
         }
 
@@ -67,6 +72,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Long getMinimalValueByStoreToken(String token) {
+        log.error("Show minimal values by store by token {}", token);
         return storeRepository.findByMinimalAmountStoreToken(token);
     }
 }

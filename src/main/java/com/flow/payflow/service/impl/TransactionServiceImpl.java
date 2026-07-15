@@ -5,21 +5,19 @@ import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.entity.*;
 import com.flow.payflow.repository.TransactionRepository;
 import com.flow.payflow.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
+    private static final Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
     private final TransactionRepository repository;
     private final CustomerService customerService;
     private final BillingAddressService billingAddressService;
@@ -56,8 +54,10 @@ public class TransactionServiceImpl implements TransactionService {
         t.setCurrency(request.getCurrency());
 
         if (getInstallmentsNoAllowed(request)) {
+            log.info("O valor da parcela é minimo, é permitido uma parcela apenas");
             t.setInstallments(1);
         } else {
+            log.info("Valor não minino, permite mais parcelas");
             t.setInstallments(request.getInstallments());
         }
 
@@ -101,17 +101,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<TransactionResponse> list(Pageable pageable) {
-        Page<Transaction> page = repository.findAll(pageable);
-        List<TransactionResponse> content = page.getContent().stream()
-                .map(t -> new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(),
-                        t.getCurrency(), t.getInstallments(), t.getPaymentMethod(), t.getCardToken(),
-                        t.getAmountTotal()))
-                .collect(Collectors.toList());
-        return new PageImpl<>(content, pageable, page.getTotalElements());
-    }
-
-    @Override
     public Transaction getByCardToken(String token) {
         Transaction transaction = repository.getByCardToken(token).orElseThrow(() -> new RuntimeException("Transaction not found: " + token));
         return transaction;
@@ -126,6 +115,8 @@ public class TransactionServiceImpl implements TransactionService {
         fees.setStore(store);
 
         feesService.save(fees);
+
+        log.info("Quantidade de parcelas na transacao da loja {}", store.getDescription());
     }
 
     private boolean getInstallmentsNoAllowed(TransactionDto dto) {

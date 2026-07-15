@@ -43,7 +43,7 @@ public class FeesConfigController {
     public ResponseEntity<FeesConfig> update(@Valid @RequestBody FeesConfigDto dto, @PathVariable(value = "id") Long id) {
         FeesConfig feesConfig = feesConfigMapper.toEntity(dto);
         feesConfig.setId(id);
-        log.info("Update config fees " + feesConfig.getId());
+        log.info("Update config fees {}", feesConfig.getId());
         FeesConfig result = feesConfigService.save(feesConfig, dto.getStoreId());
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -51,7 +51,7 @@ public class FeesConfigController {
     @GetMapping
     public ResponseEntity<FeesConfig> getByStoreToken(@RequestHeader("Authorization") String authorization) {
         String token = authorization.replace("Bearer ", "");
-        log.info("Get fees by store token " + token);
+        log.info("Get fees by store token {}", token);
         return new ResponseEntity<>(feesConfigService.getByStoreByToken(token), HttpStatus.OK);
     }
 }

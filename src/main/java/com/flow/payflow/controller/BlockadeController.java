@@ -35,7 +35,7 @@ public class BlockadeController {
         String token = null;
         if (authorization != null) {
             token = authorization.replace("Bearer ", "");
-            log.info("Recebendo token para processo blockade " + token);
+            log.info("Recebendo token para processo blockade {}", token);
         }
 
         Blockade blockade = blockadeMapper.toEntity(blockadeDto);

@@ -28,7 +28,7 @@ public class FeesConfigServiceImpl implements FeesConfigService {
         Store store = storeService.getById(storeId);
 
         if (store.getToken().isEmpty()) {
-            log.error("Token invalid " + store.getToken());
+            log.error("Token invalid {}", store.getToken());
             throw new RuntimeException("Token invalid!");
         }
 
