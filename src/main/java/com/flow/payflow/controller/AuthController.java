@@ -3,6 +3,7 @@ package com.flow.payflow.controller;
 import com.flow.payflow.config.security.TokenService;
 import com.flow.payflow.dto.AuthDto;
 import com.flow.payflow.entity.Store;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,7 +35,11 @@ public class AuthController {
         var usernamePassword =
                 new UsernamePasswordAuthenticationToken(authDto.email(), authDto.password());
 
-        authenticationManager.authenticate(usernamePassword);
+        try {
+            authenticationManager.authenticate(usernamePassword);
+        } catch (Exception e) {
+            throw new MessageException("Not_Found", "Usuário ou senha inválidos");
+        }
 
         Optional<Store> storeOptional =  storeRepository.findByEmail(authDto.email());
         Store store = storeOptional.get();

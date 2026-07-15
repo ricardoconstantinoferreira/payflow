@@ -2,6 +2,7 @@ package com.flow.payflow.controller;
 
 import com.flow.payflow.dto.TokenrizationDto;
 import com.flow.payflow.dto.TokenrizationResponseDto;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.service.TokenrizationService;
 import com.flow.payflow.usecase.VelocityCheck;
 import jakarta.validation.Valid;
@@ -38,7 +39,7 @@ public class TokenrizationController {
         if (responseDto.getCode().equals("00")) {
             if (!velocityCheck.check(tokenrizationDto.getCard(), token)) {
                 log.error("Quantidade de requisições ultrapassou o limite.");
-                throw new RuntimeException("Quantidade de requisições ultrapassou o limite.");
+                throw new MessageException("Message_Exceed", "Quantidade de requisições ultrapassou o limite.");
             }
         }
 

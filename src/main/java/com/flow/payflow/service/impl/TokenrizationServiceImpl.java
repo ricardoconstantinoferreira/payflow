@@ -2,6 +2,7 @@ package com.flow.payflow.service.impl;
 
 import com.flow.payflow.dto.TokenrizationDto;
 import com.flow.payflow.dto.TokenrizationResponseDto;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.service.TokenrizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,17 @@ public class TokenrizationServiceImpl implements TokenrizationService {
     }
 
     public TokenrizationResponseDto getTokenrization(TokenrizationDto tokenrizationDto) {
-        log.info("Fazendo requisicao na api de tokenrizacao.");
-        return this.webClient.post()
-                .uri(uri)
-                .bodyValue(tokenrizationDto)
-                .retrieve()
-                .bodyToMono(TokenrizationResponseDto.class)
-                .block();
+        try {
+            log.info("Fazendo requisicao na api de tokenrizacao.");
+            return this.webClient.post()
+                    .uri(uri)
+                    .bodyValue(tokenrizationDto)
+                    .retrieve()
+                    .bodyToMono(TokenrizationResponseDto.class)
+                    .block();
+        } catch (Exception e) {
+            log.error("Erro ao enviar a tokenrização {}", e.getMessage());
+            throw new MessageException("Error_Tokenrizacao", "Erro ao enviar a tokenrização");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.flow.payflow.service.impl;
 
 import com.flow.payflow.entity.Store;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.repository.StoreRepository;
 import com.flow.payflow.service.StoreService;
 import org.slf4j.Logger;
@@ -25,9 +26,13 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store create(Store store) {
-        String password = passwordEncoder.encode(store.getPassword());
-        store.setPassword(password);
-        return storeRepository.save(store);
+        try {
+            String password = passwordEncoder.encode(store.getPassword());
+            store.setPassword(password);
+            return storeRepository.save(store);
+        } catch (Exception e) {
+            throw new MessageException("Error_Store", "Erro ao salvar a loja.");
+        }
     }
 
     @Override

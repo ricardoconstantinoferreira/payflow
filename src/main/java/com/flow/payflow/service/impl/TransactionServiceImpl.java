@@ -3,6 +3,7 @@ package com.flow.payflow.service.impl;
 import com.flow.payflow.dto.TransactionDto;
 import com.flow.payflow.dto.TransactionResponse;
 import com.flow.payflow.entity.*;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.repository.TransactionRepository;
 import com.flow.payflow.service.*;
 import org.slf4j.Logger;
@@ -88,21 +89,21 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void updateStatus(Long id, Status status) {
-        Transaction t = repository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found: " + id));
+        Transaction t = repository.findById(id).orElseThrow(() -> new MessageException("Not_Found", "Transaction not found: " + id));
         t.setStatus(status);
         repository.save(t);
     }
 
     @Override
     public TransactionResponse getById(Long id) {
-        Transaction t = repository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found: " + id));
+        Transaction t = repository.findById(id).orElseThrow(() -> new MessageException("Not_Found", "Transaction not found: " + id));
         return new TransactionResponse(t.getId(), t.getOrderId(), t.getAmount(), t.getCurrency(),
                 t.getInstallments(), t.getPaymentMethod(), t.getCardToken(), t.getAmountTotal());
     }
 
     @Override
     public Transaction getByCardToken(String token) {
-        Transaction transaction = repository.getByCardToken(token).orElseThrow(() -> new RuntimeException("Transaction not found: " + token));
+        Transaction transaction = repository.getByCardToken(token).orElseThrow(() -> new MessageException("Not_Found", "Transaction not found: " + token));
         return transaction;
     }
 
