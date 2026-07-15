@@ -34,7 +34,7 @@ public class CaptureServiceImpl implements CaptureService {
                     .bodyToMono(CaptureResponseDto.class)
                     .block();
         } catch (Exception e) {
-            log.error("Erro ao enviar a captura.");
+            log.error("Erro ao enviar a captura {}", e.getMessage());
             throw new MessageException("Not Found", "Erro ao enviar a captura");
         }
     }
