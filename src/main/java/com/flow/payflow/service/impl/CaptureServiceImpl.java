@@ -2,6 +2,7 @@ package com.flow.payflow.service.impl;
 
 import com.flow.payflow.dto.CaptureApiDto;
 import com.flow.payflow.dto.CaptureResponseDto;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.service.CaptureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +25,17 @@ public class CaptureServiceImpl implements CaptureService {
 
     @Override
     public CaptureResponseDto capture(CaptureApiDto dto) {
-        log.info("Enviando dados da captura para adquirente.");
-        return this.webClient.post()
-                .uri(uri)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(CaptureResponseDto.class)
-                .block();
+        try {
+            log.info("Enviando dados da captura para adquirente.");
+            return this.webClient.post()
+                    .uri(uri)
+                    .bodyValue(dto)
+                    .retrieve()
+                    .bodyToMono(CaptureResponseDto.class)
+                    .block();
+        } catch (Exception e) {
+            log.error("Erro ao enviar a captura.");
+            throw new MessageException("Not Found", "Erro ao enviar a captura");
+        }
     }
 }
