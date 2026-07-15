@@ -2,6 +2,7 @@ package com.flow.payflow.service.impl;
 
 import com.flow.payflow.entity.FeesConfig;
 import com.flow.payflow.entity.Store;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.repository.FeesConfigRepository;
 import com.flow.payflow.service.FeesConfigService;
 import com.flow.payflow.service.StoreService;
@@ -28,8 +29,8 @@ public class FeesConfigServiceImpl implements FeesConfigService {
         Store store = storeService.getById(storeId);
 
         if (store.getToken().isEmpty()) {
-            log.error("Token invalid {}", store.getToken());
-            throw new RuntimeException("Token invalid!");
+            log.error("Token not found");
+            throw new MessageException("Token_Not_Found", "Token not found ");
         }
 
         feesConfig.setStore(store);
