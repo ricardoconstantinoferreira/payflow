@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 1. Configuração do Console (Exibe TUDO da aplicação) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 2. Configuração do Arquivo (Filtra apenas o SEU pacote) -->
+    <appender name="ARQUIVO_CUSTOMIZADO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Caminho onde o arquivo será salvo -->
+        <file>src/main/resources/log/aplicacao.log</file>
+
+        <!-- Política de rotação de tamanho e dias -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>src/main/resources/log/arquivados/aplicacao-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Regra Global: Envia os logs do Spring, Hibernate e do sistema APENAS para o Console -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Regra Customizada: Substitua 'com.seu.pacote' pelo pacote principal da sua aplicação (ex: com.example.demo) -->
+    <!-- Tudo o que for gerado pelas suas classes com @Slf4j irá para o Arquivo E para o Console -->
+    <logger name="com.flow.payflow" level="DEBUG" additivity="true">
+        <appender-ref ref="ARQUIVO_CUSTOMIZADO" />
+    </logger>
+
+</configuration>

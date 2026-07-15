@@ -5,6 +5,8 @@ import com.flow.payflow.entity.Store;
 import com.flow.payflow.repository.FeesConfigRepository;
 import com.flow.payflow.service.FeesConfigService;
 import com.flow.payflow.service.StoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @Service
 public class FeesConfigServiceImpl implements FeesConfigService {
 
+    private static final Logger log = LoggerFactory.getLogger(FeesConfigServiceImpl.class);
     private final FeesConfigRepository feesConfigRepository;
     private final StoreService storeService;
 
@@ -25,6 +28,7 @@ public class FeesConfigServiceImpl implements FeesConfigService {
         Store store = storeService.getById(storeId);
 
         if (store.getToken().isEmpty()) {
+            log.error("Token invalid {}", store.getToken());
             throw new RuntimeException("Token invalid!");
         }
 

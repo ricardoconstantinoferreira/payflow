@@ -1,11 +1,14 @@
 package com.flow.payflow.service.impl;
 
+import com.flow.payflow.config.component.CaptureConsumer;
 import com.flow.payflow.entity.Blockade;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.entity.TypeParameter;
 import com.flow.payflow.repository.BlockadeRepository;
 import com.flow.payflow.service.BlockadeService;
 import com.flow.payflow.service.StoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -14,6 +17,7 @@ import java.util.Optional;
 @Service
 public class BlockadeServiceImpl implements BlockadeService {
 
+    private static final Logger log = LoggerFactory.getLogger(BlockadeServiceImpl.class);
     private final BlockadeRepository blockadeRepository;
     private final StoreService storeService;
 
@@ -45,17 +49,20 @@ public class BlockadeServiceImpl implements BlockadeService {
             blockade.setParameter(parameterDays);
         }
 
+        log.info("Salvando blockade classe blockade.");
         return blockadeRepository.save(blockade);
     }
 
     @Override
     public Blockade getByStoreId(Long storeId) {
+        log.info("Pegando a loja pelo id  classe blockade.");
         Optional<Blockade> blockade = blockadeRepository.findByStoreId(storeId);
         return (blockade.isEmpty()) ? null : blockade.get();
     }
 
     @Override
     public Blockade getBlockadeConfig(String token) {
+        log.info("Pegando a loja pelo token classe blockade.");
         Store store = storeService.getStoreByToken(token);
         return getByStoreId(store.getId());
     }

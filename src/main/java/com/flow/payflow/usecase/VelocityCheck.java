@@ -4,6 +4,8 @@ import com.flow.payflow.entity.Blockade;
 import com.flow.payflow.entity.BlockadeAssistent;
 import com.flow.payflow.service.BlockadeAssistentService;
 import com.flow.payflow.service.BlockadeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -11,6 +13,7 @@ import java.time.OffsetDateTime;
 @Component
 public class VelocityCheck {
 
+    private static final Logger log = LoggerFactory.getLogger(VelocityCheck.class);
     private final BlockadeAssistentService blockadeAssistentService;
     private final BlockadeService blockadeService;
 
@@ -31,10 +34,12 @@ public class VelocityCheck {
             blockadeAssistent.setCounter(1);
             blockadeAssistent.setCreatedAt(OffsetDateTime.now());
             blockadeAssistentService.save(blockadeAssistent);
+            log.info("Adicionando blockade assistent.");
             return true;
         } else {
             BlockadeAssistent blockadeAssistent2 = setQtyBlockadeAssistent(blockadeAssistent1);
 
+            log.info("Adicionando regra de negócio blockade assistent.");
             if (!compareDate(token, blockadeAssistent2)) {
                 return !(blockadeAssistent2.getCounter() > blockadeService.getBlockadeConfig(token).getQty());
             } else {
@@ -45,16 +50,19 @@ public class VelocityCheck {
     }
 
     private BlockadeAssistent setCurrentDate(BlockadeAssistent blockadeAssistent) {
+        log.info("Definindo a data atual blockade assistent.");
         blockadeAssistent.setCreatedAt(OffsetDateTime.now());
         return blockadeAssistentService.save(blockadeAssistent);
     }
 
     private BlockadeAssistent setQtyBlockadeAssistent(BlockadeAssistent blockadeAssistent) {
+        log.info("Atualizando a quantidade blockade assistent.");
         blockadeAssistent.setCounter(blockadeAssistent.getCounter() + 1);
         return blockadeAssistentService.save(blockadeAssistent);
     }
 
     private boolean compareDate(String token, BlockadeAssistent blockadeAssistent) {
+        log.info("Comparando data para regra de negocio blockade assistent.");
         Blockade blockade = blockadeService.getBlockadeConfig(token);
         Long parameter = blockade.getParameter();
         OffsetDateTime newDate = blockadeAssistent.getCreatedAt().plusMinutes(parameter);
