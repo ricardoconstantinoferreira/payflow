@@ -62,7 +62,7 @@ class AuthControllerTest {
         when(storeRepository.findByEmail(dto.email())).thenReturn(Optional.of(store));
         when(tokenService.generateToken(any(Store.class))).thenReturn("tok");
 
-        mvc.perform(post("/api/transaction/auth/login")
+        mvc.perform(post("/api/payflow/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -77,7 +77,7 @@ class AuthControllerTest {
         doThrow(new RuntimeException("bad credentials"))
                 .when(authenticationManager).authenticate(any());
 
-        mvc.perform(post("/api/transaction/auth/login")
+        mvc.perform(post("/api/payflow/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isNotFound())

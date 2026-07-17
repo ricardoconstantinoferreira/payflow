@@ -53,7 +53,7 @@ class StoreControllerTest {
         when(storeMapper.toEntity(any(StoreDto.class))).thenReturn(entity);
         when(storeService.create(any(Store.class))).thenReturn(entity);
 
-        mvc.perform(post("/api/transaction/store")
+        mvc.perform(post("/api/payflow/store")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())

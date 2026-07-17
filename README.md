@@ -13,11 +13,11 @@
 
 PayFlow é um gateway de pagamento simplificado que expõe APIs REST para processamento assíncrono de transações, gerenciamento de lojas e configuração de taxas. Fluxos principais:
 
-- Autenticação: lojas se autentican via `/api/transaction/auth/login` gerando token que é usado em endpoints protegidos.
+- Autenticação: lojas se autentican via `/api/payflow/auth/login` gerando token que é usado em endpoints protegidos.
 - Tokenização: valida cartão e retorna um token/resultado via `/v1/transaction/tokenrization`. Há um mecanismo de `VelocityCheck` para limitar requisições por cartão/token.
-- Criação de transação: o endpoint de criação (`POST /api/transaction/payment`) recebe uma transação (DTO) e a envia para processamento assíncrono via RabbitMQ. A resposta imediata é 202 (processando).
-- Atualização de status e webhook: o status de uma transação pode ser atualizado via `/api/transaction/payment/status/{id}`, e após alteração o sistema envia notificação ao webhook da loja (via `ChangeStatusService`).
-- Captura: existe um endpoint específico para capturas que envia uma mensagem para uma fila de captura (`/api/transaction/{token}/capture`).
+- Criação de transação: o endpoint de criação (`POST /api/payflow/transaction`) recebe uma transação (DTO) e a envia para processamento assíncrono via RabbitMQ. A resposta imediata é 202 (processando).
+- Atualização de status e webhook: o status de uma transação pode ser atualizado via `/api/payflow/transaction/status/{id}`, e após alteração o sistema envia notificação ao webhook da loja (via `ChangeStatusService`).
+- Captura: existe um endpoint específico para capturas que envia uma mensagem para uma fila de captura (`/api/payflow/{token}/capture`).
 - Bloqueio/Liberação: permite criar bloqueios de transações (endpoint de blockade) para operações de segurança/fraude.
 - Gestão de lojas e configuração de taxas: CRUD de `Store` e configuração de `FeesConfig` por loja.
 
@@ -31,58 +31,58 @@ Observações arquiteturais:
 Abaixo um inventário dos endpoints expostos agrupados por controller (método, path, entrada e saída resumidas):
 
 - AuthController
-  - POST `/api/transaction/auth/login`
+  - POST `/api/payflow/auth/login`
     - Request: AuthDto (email, password)
     - Response: Store (contém token no campo `token`)
     - Propósito: autenticar loja e devolver um token de uso nos headers `Authorization`.
 
 - TokenrizationController
-  - POST `/v1/transaction/tokenrization`
+  - POST `/v1/payflow/tokenrization`
     - Request: TokenrizationDto
     - Headers: `Authorization: Bearer <token>` (opcional, usado para limites por loja)
     - Response: TokenrizationResponseDto
     - Propósito: validação/tokenização de cartão; dispara `VelocityCheck` caso necessário e pode lançar erro se ultrapassar limite de requisições.
 
 - TransactionController
-  - POST `/api/transaction/payment` (consumes application/json)
+  - POST `/api/payflow/transaction` (consumes application/json)
     - Request: TransactionDto (informações da transação)
     - Headers: `Authorization: Bearer <token>` (opcional — quando presente, token é anexado ao DTO)
     - Behavior: envia o DTO para RabbitMQ (exchange/route definidos em `AutorizationMQConfig`) e retorna 202
     - Response: { status: processing, message: ... }
-  - GET `/api/transaction/payment/{id}`
+  - GET `/api/payflow/transaction/{id}`
     - Response: TransactionResponse
-  - GET `/api/transaction/payment` (paginated)
+  - GET `/api/payflow/transaction` (paginated)
     - Query: parâmetros de `Pageable`
     - Response: Page<TransactionResponse>
-  - PUT `/api/transaction/payment/status/{id}`
+  - PUT `/api/payflow/transaction/status/{id}`
     - Request: TransactionStatusDto (ex.: status)
     - Headers: `Authorization: Bearer <token>` (opcional — usado para localizar store e webhook)
     - Behavior: atualiza status da transação, recupera webhook da loja e envia notificação via `ChangeStatusService`. Retorna 202.
 
 - CaptureController
-  - POST `/api/transaction/{token}/capture`
+  - POST `/api/payflow/{token}/capture`
     - Path: token (identificador de autorização/token da transação)
     - Request: CaptureDto
     - Behavior: constrói `CaptureApiDto` e envia para RabbitMQ (exchange/route em `CaptureMQConfig`). Retorna 202.
 
 - BlockadeController
-  - POST `/api/transaction/blockade`
+  - POST `/api/payflow/blockade`
     - Headers: `Authorization: Bearer <token>`
     - Request: BlockadeDto
     - Response: Blockade (201)
     - Propósito: criar um bloqueio relacionado à loja/conta (ex.: medidas antifraude ou reversão temporária).
 
 - StoreController
-  - POST `/api/transaction/store` — criar loja (StoreDto)
-  - PUT `/api/transaction/store/{id}` — atualizar loja (StoreDto)
-  - GET `/api/transaction/store/{id}` — obter loja por id
-  - GET `/api/transaction/store` — lista todas as lojas
-  - DELETE `/api/transaction/store/{id}` — remove loja
+  - POST `/api/payflow/store` — criar loja (StoreDto)
+  - PUT `/api/payflow/store/{id}` — atualizar loja (StoreDto)
+  - GET `/api/payflow/store/{id}` — obter loja por id
+  - GET `/api/payflow/store` — lista todas as lojas
+  - DELETE `/api/payflow/store/{id}` — remove loja
 
 - FeesConfigController
-  - POST `/api/transaction/store/config` — criar configuração de fees (FeesConfigDto) (201)
-  - PUT `/api/transaction/store/config/{id}` — atualizar configuration (201)
-  - GET `/api/transaction/store/config` — obter configuração baseada no token enviado no header `Authorization`
+  - POST `/api/payflow/store/config` — criar configuração de fees (FeesConfigDto) (201)
+  - PUT `/api/payflow/store/config/{id}` — atualizar configuration (201)
+  - GET `/api/payflow/store/config` — obter configuração baseada no token enviado no header `Authorization`
 
 
 ## AutorizationMQConfig / CaptureMQConfig (para que servem)
@@ -131,7 +131,7 @@ public WebClient webClient(WebClient.Builder builder) {
 3) Assunto assíncrono — "na linha 44 na chamada ao rabbit, como vou ter o valor se der erro na transacao?"
    - Contexto: o endpoint posta a transação na fila e responde imediatamente (202). Se o processamento do worker falhar, a resposta HTTP original já foi enviada.
    - Recomendações:
-     - Use correlationId / messageId para rastrear mensagens e retornar links de consulta (p.ex. fornecer um transactionId no corpo da resposta) para que o cliente consulte o status posteriormente (`GET /api/transaction/payment/{id}`).
+     - Use correlationId / messageId para rastrear mensagens e retornar links de consulta (p.ex. fornecer um transactionId no corpo da resposta) para que o cliente consulte o status posteriormente (`GET /api/payflow/transaction/{id}`).
      - Configure Dead Letter Exchanges (DLX) e políticas de retry nos workers para lidar com falhas.
      - Considere um fluxo síncrono opcional ou um endpoint de callback/webhook se o cliente precisar da confirmação imediata.
 

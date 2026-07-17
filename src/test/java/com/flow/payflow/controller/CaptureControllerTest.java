@@ -44,7 +44,7 @@ class CaptureControllerTest {
         CaptureDto dto = new CaptureDto();
         dto.setAmount(10f);
 
-        mvc.perform(post("/api/transaction/token123/capture")
+        mvc.perform(post("/api/payflow/token123/capture")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isAccepted());

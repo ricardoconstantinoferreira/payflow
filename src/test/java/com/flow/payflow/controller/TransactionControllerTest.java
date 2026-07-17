@@ -59,7 +59,7 @@ class TransactionControllerTest {
         TransactionDto dto = new TransactionDto();
         dto.setOrderId("1");
 
-        mvc.perform(post("/api/transaction/payment")
+        mvc.perform(post("/api/payflow/payment")
                 .header("Authorization", "Bearer token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
@@ -76,7 +76,7 @@ class TransactionControllerTest {
         store.setWebhook("http://callback");
         when(storeService.getStoreByToken(any(String.class))).thenReturn(store);
 
-        mvc.perform(put("/api/transaction/payment/status/1")
+        mvc.perform(put("/api/payflow/payment/status/1")
                 .header("Authorization", "Bearer token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
@@ -89,7 +89,7 @@ class TransactionControllerTest {
         TransactionResponse resp = new TransactionResponse(1L, "o", 10f, "BRL", 1, "card", "t", 10f);
         when(transactionService.getById(1L)).thenReturn(resp);
 
-        mvc.perform(get("/api/transaction/payment/1"))
+        mvc.perform(get("/api/payflow/payment/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }

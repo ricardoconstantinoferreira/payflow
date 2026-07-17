@@ -26,9 +26,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/transaction/store").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/transaction/store/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/transaction/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payflow/store").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/payflow/store/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payflow/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

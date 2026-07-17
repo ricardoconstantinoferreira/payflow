@@ -55,7 +55,7 @@ class FeesConfigControllerTest {
         when(feesConfigMapper.toEntity(any(FeesConfigDto.class))).thenReturn(entity);
         when(feesConfigService.save(any(FeesConfig.class), any(Long.class))).thenReturn(entity);
 
-        mvc.perform(post("/api/transaction/store/config")
+        mvc.perform(post("/api/payflow/store/config")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ class FeesConfigControllerTest {
         cfg.setFees(5);
         when(feesConfigService.getByStoreByToken(any(String.class))).thenReturn(cfg);
 
-        mvc.perform(get("/api/transaction/store/config")
+        mvc.perform(get("/api/payflow/store/config")
                 .header("Authorization", "Bearer token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.fees").value(5));

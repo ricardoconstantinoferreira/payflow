@@ -62,7 +62,7 @@ class BlockadeControllerTest {
         when(blockadeMapper.toEntity(any(BlockadeDto.class))).thenReturn(entity);
         when(blockadeService.save(any(Blockade.class), any(String.class))).thenReturn(entity);
 
-        mvc.perform(post("/api/transaction/blockade")
+        mvc.perform(post("/api/payflow/blockade")
                         .header("Authorization", "Bearer token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
