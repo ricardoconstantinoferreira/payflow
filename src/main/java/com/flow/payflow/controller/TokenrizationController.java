@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/v1/transaction/tokenrization", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/payflow/tokenrization", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TokenrizationController {
 
     private static final Logger log = LoggerFactory.getLogger(TokenrizationController.class);

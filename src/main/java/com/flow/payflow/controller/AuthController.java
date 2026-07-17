@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/api/transaction/auth/login", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/payflow/auth/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
 
     @Autowired

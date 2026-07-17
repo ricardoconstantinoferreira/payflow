@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/transaction/store", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/payflow/store", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StoreController {
 
     private static final Logger log = LoggerFactory.getLogger(StoreController.class);

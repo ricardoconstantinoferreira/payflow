@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/transaction/payment", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/payflow/transaction", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TransactionController {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);

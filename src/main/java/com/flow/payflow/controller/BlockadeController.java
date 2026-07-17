@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/transaction/blockade", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/payflow/blockade", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlockadeController {
 
     private static final Logger log = LoggerFactory.getLogger(BlockadeController.class);

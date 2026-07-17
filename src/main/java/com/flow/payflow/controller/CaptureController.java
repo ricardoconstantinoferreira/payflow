@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/transaction/{token}/capture", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/payflow/{token}/capture", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CaptureController {
 
     private static final Logger log = LoggerFactory.getLogger(CaptureController.class);
