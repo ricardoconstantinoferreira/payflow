@@ -7,4 +7,6 @@ public interface FeesConfigService {
     FeesConfig save(FeesConfig feesConfig, Long storeId);
     FeesConfig getByStoreByToken(String token);
     FeesConfig getByStoreId(Long storeId);
+    void deleteById(Long id);
+    FeesConfig getById(Long id);
 }

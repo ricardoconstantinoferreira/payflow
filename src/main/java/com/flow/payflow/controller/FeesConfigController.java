@@ -4,7 +4,6 @@ import com.flow.payflow.dto.FeesConfigDto;
 import com.flow.payflow.entity.FeesConfig;
 import com.flow.payflow.mapper.FeesConfigMapper;
 import com.flow.payflow.service.FeesConfigService;
-import com.flow.payflow.service.StoreService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +47,20 @@ public class FeesConfigController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FeesConfig> getById(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(feesConfigService.getById(id), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<FeesConfig> getByStoreToken(@RequestHeader("Authorization") String authorization) {
         String token = authorization.replace("Bearer ", "");
         log.info("Get fees by store token {}", token);
         return new ResponseEntity<>(feesConfigService.getByStoreByToken(token), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable(value = "id") Long id) {
+        feesConfigService.deleteById(id);
     }
 }
