@@ -8,4 +8,5 @@ public interface FeesConfigService {
     FeesConfig getByStoreByToken(String token);
     FeesConfig getByStoreId(Long storeId);
     void deleteById(Long id);
+    FeesConfig getById(Long id);
 }

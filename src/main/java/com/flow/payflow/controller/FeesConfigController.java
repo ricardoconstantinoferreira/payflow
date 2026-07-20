@@ -47,6 +47,11 @@ public class FeesConfigController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FeesConfig> getById(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(feesConfigService.getById(id), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<FeesConfig> getByStoreToken(@RequestHeader("Authorization") String authorization) {
         String token = authorization.replace("Bearer ", "");

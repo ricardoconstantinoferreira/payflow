@@ -60,6 +60,11 @@ public class FeesConfigServiceImpl implements FeesConfigService {
         feesConfigRepository.deleteById(id);
     }
 
+    @Override
+    public FeesConfig getById(Long id) {
+        return feesConfigRepository.findById(id).orElseThrow(() -> new MessageException("Not_Found", "Fees config not found: " + id));
+    }
+
     private Long hasFeesConfig(Long storeId) {
         Optional<FeesConfig> feesConfig = feesConfigRepository.findByStoreId(storeId);
         return (feesConfig.isEmpty()) ? 0 : feesConfig.get().getId();
