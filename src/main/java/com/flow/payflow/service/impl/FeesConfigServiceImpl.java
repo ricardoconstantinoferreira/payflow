@@ -55,6 +55,11 @@ public class FeesConfigServiceImpl implements FeesConfigService {
         return (feesConfig.isEmpty()) ? null : feesConfig.get();
     }
 
+    @Override
+    public void deleteById(Long id) {
+        feesConfigRepository.deleteById(id);
+    }
+
     private Long hasFeesConfig(Long storeId) {
         Optional<FeesConfig> feesConfig = feesConfigRepository.findByStoreId(storeId);
         return (feesConfig.isEmpty()) ? 0 : feesConfig.get().getId();
