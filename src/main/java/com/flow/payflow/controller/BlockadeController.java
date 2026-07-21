@@ -44,13 +44,22 @@ public class BlockadeController {
         );
     }
 
+    @GetMapping
+    public ResponseEntity<Blockade> getByStoreToken(@RequestHeader("Authorization") String authorization) {
+        String token = authorization.replace("Bearer ", "");
+        log.info("Get blockade token {}", token);
+        return new ResponseEntity<>(blockadeService.getBlockadeConfig(token), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Blockade> getById(@PathVariable(value = "id") Long id) {
+        log.info("Get blockade by id {}", id);
         return new ResponseEntity<>(blockadeService.getById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable(value = "id") Long id) {
+        log.info("Delete blockade by id {}", id);
         blockadeService.deleteById(id);
     }
 }
