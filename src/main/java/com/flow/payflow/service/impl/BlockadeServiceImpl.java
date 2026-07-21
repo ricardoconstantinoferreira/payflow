@@ -1,6 +1,5 @@
 package com.flow.payflow.service.impl;
 
-import com.flow.payflow.config.component.CaptureConsumer;
 import com.flow.payflow.entity.Blockade;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.entity.TypeParameter;
