@@ -43,4 +43,14 @@ public class BlockadeController {
                 blockadeService.save(blockade, token)
         );
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Blockade> getById(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(blockadeService.getById(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable(value = "id") Long id) {
+        blockadeService.deleteById(id);
+    }
 }

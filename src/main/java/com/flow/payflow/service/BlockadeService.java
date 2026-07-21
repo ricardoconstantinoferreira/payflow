@@ -6,4 +6,6 @@ public interface BlockadeService {
     Blockade save(Blockade blockade, String token);
     Blockade getByStoreId(Long storeId);
     Blockade getBlockadeConfig(String token);
+    Blockade getById(Long id);
+    void deleteById(Long id);
 }

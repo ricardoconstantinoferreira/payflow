@@ -4,6 +4,7 @@ import com.flow.payflow.config.component.CaptureConsumer;
 import com.flow.payflow.entity.Blockade;
 import com.flow.payflow.entity.Store;
 import com.flow.payflow.entity.TypeParameter;
+import com.flow.payflow.exception.MessageException;
 import com.flow.payflow.repository.BlockadeRepository;
 import com.flow.payflow.service.BlockadeService;
 import com.flow.payflow.service.StoreService;
@@ -65,5 +66,15 @@ public class BlockadeServiceImpl implements BlockadeService {
         log.info("Pegando a loja pelo token classe blockade.");
         Store store = storeService.getStoreByToken(token);
         return getByStoreId(store.getId());
+    }
+
+    @Override
+    public Blockade getById(Long id) {
+        return blockadeRepository.findById(id).orElseThrow(() -> new MessageException("Not_Found", "Blockade config not found: " + id));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        blockadeRepository.deleteById(id);
     }
 }
